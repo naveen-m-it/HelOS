@@ -1,4 +1,4 @@
-[org x7c00]
+[org 0x7c00]
 start:
     mov al, 0x0003
     int 0x10
