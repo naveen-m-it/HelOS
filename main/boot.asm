@@ -47,10 +47,10 @@ get_command:
     call print_command_tag
     .loop:
         call _read_char
-        cmp al, 0xd
+        cmp al, 0x0d
         je _process_command
-        mov si, command_buffer_len
-        cmp si, 63
+        movzx si, byte [command_buffer_len]
+        cmp si, 62
         je .end
         mov byte [command_buffer + si], al
         inc byte [command_buffer_len]
@@ -61,7 +61,7 @@ get_command:
 
 ; Processing command
 _process_command:
-
+    ;mov byte [command_buffer + si], 0
     mov si, command_buffer
     mov di, exit_cmd
     call _compare_command
@@ -209,6 +209,18 @@ _print_debug_msg:
 
 _print_equal_msg:
     mov si, equal_msg
+    .loop:
+        mov al, [si]
+        cmp al, 0
+        je .end
+        call _print_char
+        inc si
+        jmp .loop
+    .end:
+        ret
+
+_print_buffer:
+    mov si, command_buffer
     .loop:
         mov al, [si]
         cmp al, 0
